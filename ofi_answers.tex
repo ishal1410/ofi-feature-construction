@@ -1,0 +1,45 @@
+\documentclass{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{booktabs}
+
+\title{Order Flow Imbalance: Conceptual Overview and Feature Design}
+\author{Vishal}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section*{1. What is Order Flow Imbalance (OFI)?}
+Order Flow Imbalance (OFI) quantifies buy and sell pressure based on dynamic changes in the limit order book. It captures the net imbalance between incoming demand (bid side) and supply (ask side). A positive OFI implies net buying pressure; a negative value reflects net selling activity.
+
+\section*{2. OFI Feature Variants}
+\textbf{Best-Level OFI}: Focuses on top-of-book changes (Level 1), highlighting immediate market shifts.
+
+\textbf{Multi-Level OFI}: Aggregates activity across several depths (e.g., Levels 0–9), capturing deeper liquidity trends.
+
+\textbf{Integrated OFI}: Applies exponentially decaying weights across levels to emphasize near-touch actions while preserving broader context.
+
+\section*{3. Design Choices}
+\begin{itemize}
+  \item Book snapshots are chronologically ordered by \texttt{ts\_recv}.
+  \item Price and size differentials are computed using \texttt{diff()}.
+  \item Only size increases on the bid side and decreases on the ask side contribute to the signal.
+  \item Integrated OFI uses decaying weights defined as:
+    \[
+      w_i = e^{-\alpha i}, \quad \text{with } \alpha \approx 0.2
+    \]
+\end{itemize}
+
+\section*{4. Sample Output Preview}
+\begin{verbatim}
+Integrated OFI:
+0      0.00
+1      2.00
+2      3.00
+3    134.06
+4   -134.06
+\end{verbatim}
+
+\end{document}
