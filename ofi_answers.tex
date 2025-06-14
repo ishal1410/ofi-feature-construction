@@ -15,11 +15,10 @@
 Order Flow Imbalance (OFI) quantifies buy and sell pressure based on dynamic changes in the limit order book. It captures the net imbalance between incoming demand (bid side) and supply (ask side). A positive OFI implies net buying pressure; a negative value reflects net selling activity.
 
 \section*{2. OFI Feature Variants}
-\textbf{Best-Level OFI}: Focuses on top-of-book changes (Level 1), highlighting immediate market shifts.
-
-\textbf{Multi-Level OFI}: Aggregates activity across several depths (e.g., Levels 0–9), capturing deeper liquidity trends.
-
-\textbf{Integrated OFI}: Applies exponentially decaying weights across levels to emphasize near-touch actions while preserving broader context.
+\textbf{Best-Level OFI}: Focuses on top-of-book changes (Level 1), highlighting immediate market shifts.\\
+\textbf{Multi-Level OFI}: Aggregates activity across several depths (e.g., Levels 0–9), capturing deeper liquidity trends.\\
+\textbf{Integrated OFI}: Applies exponentially decaying weights across levels to emphasize near-touch actions while preserving broader context.\\
+\textbf{Cross-Asset OFI}: Models how order flow imbalance in one asset affects short-term returns in another, capturing systemic inter-asset influence.
 
 \section*{3. Design Choices}
 \begin{itemize}
@@ -41,5 +40,22 @@ Integrated OFI:
 3    134.06
 4   -134.06
 \end{verbatim}
+
+\section*{5. Conceptual Questions}
+
+\textbf{Why measure OFI at multiple depth levels?} \\
+Multi-depth OFI captures pressure building deeper in the book that may precede visible price moves. It offers a richer view of liquidity stress and trader intent.
+
+\textbf{Why use Lasso instead of OLS?} \\
+Lasso regression enforces sparsity by shrinking weaker coefficients to zero. This is ideal for high-dimensional features like cross-asset OFI, where only a few predictors matter.
+
+\textbf{Why is OFI a better predictor than trade volume?} \\
+Volume looks backward—it measures completed trades. OFI captures forward-looking intent, reflecting order placements, cancellations, and shifts in liquidity pressure.
+
+\textbf{What is Cross-Asset OFI?} \\
+Cross-Asset OFI quantifies how order flow in one asset influences returns in another. It's useful for modeling market-wide liquidity stress or sectoral dynamics.
+
+\section*{6. Conclusion}
+OFI-based features offer dynamic insight into real-time market pressure and latent liquidity behavior. Incorporating multi-level and cross-asset extensions improves short-term return prediction in high-frequency settings.
 
 \end{document}
